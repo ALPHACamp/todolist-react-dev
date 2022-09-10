@@ -4,7 +4,7 @@ import { TodoPage, LoginPage, SignUpPage } from './pages';
 function App() {
   return (
     <div className="app">
-      <SignUpPage />
+      <TodoPage />
     </div>
   );
 }
