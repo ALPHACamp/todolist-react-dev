@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import styled from 'styled-components';
 
 const StyledAddTodoContainer = styled.div`
@@ -69,13 +70,23 @@ const StyledAddTodoActionContainer = styled.div`
 `;
 const TodoInput = ({ inputValue, onChange, onKeyPress, onAddTodo }) => {
   return (
-    <StyledAddTodoContainer>
+    <StyledAddTodoContainer className={clsx('', {active: })}>
       <StyledLabelIcon className="icon" htmlFor="add-todo-input" />
       <StyledInputContainer>
-        <input id="add-todo-input" type="text" placeholder="新增工作" />
+        <input
+          id="add-todo-input"
+          type="text"
+          placeholder="新增工作"
+          value={inputValue}
+          onChange={(e) => {
+            onChange?.(e.target.value);
+          }}
+        />
       </StyledInputContainer>
       <StyledAddTodoActionContainer>
-        <button className="btn-reset">新增</button>
+        <button className="btn-reset" onClick={() => onAddTodo?.()}>
+          新增
+        </button>
       </StyledAddTodoActionContainer>
     </StyledAddTodoContainer>
   );
