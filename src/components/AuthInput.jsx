@@ -26,7 +26,7 @@ const AuthInput = () => {
   return (
     <StyledContainer>
       <StyledLabel>label</StyledLabel>
-      <StyledInput type="text" placeholder="" />
+      <StyledInput type="text" placeholder="placeholder" />
     </StyledContainer>
   );
 };
