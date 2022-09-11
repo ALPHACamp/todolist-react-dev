@@ -1,4 +1,6 @@
+import { createTodo, deleteTodo, getTodos, patchTodo } from 'api/todos';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 const dummyTodos = [
@@ -32,56 +34,84 @@ const TodoPage = () => {
     setInputValue(value);
   };
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (inputValue.length === 0) {
       return;
     }
 
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false,
-        },
-      ];
-    });
-
-    setInputValue('');
-  };
-
-  const handleKeyPress = () => {
-    if (inputValue.length === 0) {
-      return;
-    }
-
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false,
-        },
-      ];
-    });
-
-    setInputValue('');
-  };
-
-  const handleToggleDone = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            isDone: !todo.isDone,
-          };
-        }
-        return todo;
+    try {
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
       });
-    });
+
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleKeyPress = async () => {
+    if (inputValue.length === 0) {
+      return;
+    }
+
+    try {
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
+      });
+
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleToggleDone = async (id) => {
+    const currentTodo = todos.find((todo) => todo.id === id);
+
+    try {
+      await patchTodo({
+        id,
+        isDone: !currentTodo.isDone,
+      });
+      setTodos((prevTodos) => {
+        return prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: !todo.isDone,
+            };
+          }
+          return todo;
+        });
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleChangeMode = ({ id, isEdit }) => {
@@ -99,25 +129,47 @@ const TodoPage = () => {
     });
   };
 
-  const handleSave = ({ id, title }) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            title,
-            isEdit: false,
-          };
-        }
-
-        return todo;
+  const handleSave = async ({ id, title }) => {
+    try {
+      await patchTodo({
+        id,
+        title,
       });
-    });
+      setTodos((prevTodos) => {
+        return prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              title,
+              isEdit: false,
+            };
+          }
+
+          return todo;
+        });
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleDelete = (id) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteTodo(id);
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  useEffect(() => {
+    getTodos()
+      .then((todos) => {
+        setTodos(todos.map((todo) => ({ ...todo, isEdit: false })));
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div>
       TodoPage
