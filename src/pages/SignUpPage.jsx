@@ -7,12 +7,23 @@ import {
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useAuth } from 'contexts/AuthContext';
 
 const SignUpPage = () => {
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { isAuthenticated, register } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/todo" replace />;
+  }
+
+  const handleClick = () => {
+    register({ username, email, password });
+  };
 
   return (
     <AuthContainer>
@@ -54,7 +65,7 @@ const SignUpPage = () => {
           }}
         />
       </AuthInputContainer>
-      <AuthButton>註冊</AuthButton>
+      <AuthButton onClick={handleClick}>註冊</AuthButton>
       <Link to="/login">
         <AuthLinkText>取消</AuthLinkText>
       </Link>

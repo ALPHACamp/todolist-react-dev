@@ -1,3 +1,4 @@
+import { useAuth } from 'contexts/AuthContext';
 import styled from 'styled-components';
 
 const StyledFooter = styled.footer`
@@ -31,11 +32,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const Footer = () => {
+const Footer = ({ numOfTodos }) => {
+  const { logout } = useAuth();
   return (
     <StyledFooter>
-      <p>剩餘項目數： 0</p>
-      <StyledButton>登出</StyledButton>
+      <p>剩餘項目數： {numOfTodos}</p>
+      <StyledButton onClick={() => logout()}>登出</StyledButton>
     </StyledFooter>
   );
 };

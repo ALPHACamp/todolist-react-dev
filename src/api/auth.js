@@ -29,7 +29,7 @@ export const checkPermission = async (authToken) => {
   try {
     const res = await axios.get(`${authUrl}/test-token`, {
       headers: {
-        Authorization: 'Bearer' + authToken,
+        Authorization: 'Bearer ' + authToken,
       },
     });
 

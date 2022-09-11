@@ -1,38 +1,21 @@
 import { createTodo, deleteTodo, getTodos, patchTodo } from 'api/todos';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { useAuth } from 'contexts/AuthContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
-
-const dummyTodos = [
-  {
-    title: 'Learn react-router',
-    isDone: true,
-    id: 1,
-  },
-  {
-    title: 'Learn to create custom hooks',
-    isDone: false,
-    id: 2,
-  },
-  {
-    title: 'Learn to use context',
-    isDone: true,
-    id: 3,
-  },
-  {
-    title: 'Learn to implement auth',
-    isDone: false,
-    id: 4,
-  },
-];
+import { Navigate } from 'react-router-dom';
 
 const TodoPage = () => {
   const [inputValue, setInputValue] = useState('');
-  const [todos, setTodos] = useState(dummyTodos);
+  const [todos, setTodos] = useState([]);
+
+  const todoNums = todos.length;
 
   const handleChange = (value) => {
     setInputValue(value);
   };
+
+  const { isAuthenticated, currentMember } = useAuth();
 
   const handleAddTodo = async () => {
     if (inputValue.length === 0) {
@@ -170,10 +153,12 @@ const TodoPage = () => {
       .catch((err) => console.error(err));
   }, []);
 
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
   return (
     <div>
-      TodoPage
-      <Header />
+      <Header username={currentMember?.name} />
       <TodoInput
         inputValue={inputValue}
         onChange={handleChange}
@@ -187,7 +172,7 @@ const TodoPage = () => {
         onSave={handleSave}
         onDelete={handleDelete}
       />
-      <Footer />
+      <Footer numOfTodos={todoNums} />
     </div>
   );
 };
