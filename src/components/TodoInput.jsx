@@ -70,7 +70,9 @@ const StyledAddTodoActionContainer = styled.div`
 `;
 const TodoInput = ({ inputValue, onChange, onKeyPress, onAddTodo }) => {
   return (
-    <StyledAddTodoContainer className={clsx('', {active: })}>
+    <StyledAddTodoContainer
+      className={clsx('', { active: inputValue.length > 0 })}
+    >
       <StyledLabelIcon className="icon" htmlFor="add-todo-input" />
       <StyledInputContainer>
         <input
@@ -81,9 +83,16 @@ const TodoInput = ({ inputValue, onChange, onKeyPress, onAddTodo }) => {
           onChange={(e) => {
             onChange?.(e.target.value);
           }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              onKeyPress?.();
+            }
+          }}
         />
       </StyledInputContainer>
-      <StyledAddTodoActionContainer>
+      <StyledAddTodoActionContainer
+        className={clsx('', { active: inputValue.length > 0 })}
+      >
         <button className="btn-reset" onClick={() => onAddTodo?.()}>
           新增
         </button>

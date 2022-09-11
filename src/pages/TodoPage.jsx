@@ -18,7 +18,7 @@ const dummyTodos = [
     id: 3,
   },
   {
-    title: 'Learn to implement uth',
+    title: 'Learn to implement auth',
     isDone: false,
     id: 4,
   },
@@ -28,11 +28,11 @@ const TodoPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [todos, setTodos] = useState(dummyTodos);
 
-  const handleInput = (value) => {
+  const handleChange = (value) => {
     setInputValue(value);
   };
 
-  const handleTodo = () => {
+  const handleAddTodo = () => {
     if (inputValue.length === 0) {
       return;
     }
@@ -50,16 +50,91 @@ const TodoPage = () => {
 
     setInputValue('');
   };
+
+  const handleKeyPress = () => {
+    if (inputValue.length === 0) {
+      return;
+    }
+
+    setTodos((prevTodos) => {
+      return [
+        ...prevTodos,
+        {
+          id: Math.random() * 100,
+          title: inputValue,
+          isDone: false,
+        },
+      ];
+    });
+
+    setInputValue('');
+  };
+
+  const handleToggleDone = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isDone: !todo.isDone,
+          };
+        }
+        return todo;
+      });
+    });
+  };
+
+  const handleChangeMode = ({ id, isEdit }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isEdit,
+          };
+        }
+
+        return { ...todo, isEdit: false };
+      });
+    });
+  };
+
+  const handleSave = ({ id, title }) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            title,
+            isEdit: false,
+          };
+        }
+
+        return todo;
+      });
+    });
+  };
+
+  const handleDelete = (id) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  };
   return (
     <div>
       TodoPage
       <Header />
       <TodoInput
         inputValue={inputValue}
-        onChange={handleInput}
-        onAddTodo={handleTodo}
+        onChange={handleChange}
+        onAddTodo={handleAddTodo}
+        onKeyPress={handleKeyPress}
       />
-      <TodoCollection todos={todos} />
+      <TodoCollection
+        todos={todos}
+        onToggleDone={handleToggleDone}
+        onChangeMode={handleChangeMode}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
       <Footer />
     </div>
   );
