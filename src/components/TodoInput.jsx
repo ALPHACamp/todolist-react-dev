@@ -72,7 +72,6 @@ const TodoInput = ({ inputValue, onChange, onKeyPress, onAddTodo }) => {
     <StyledAddTodoContainer>
       <StyledLabelIcon className="icon" htmlFor="add-todo-input" />
       <StyledInputContainer>
-        <input id="add-todo-input" type="text" placeholder="新增工作" />
         <input
           id="add-todo-input"
           type="text"
@@ -80,6 +79,11 @@ const TodoInput = ({ inputValue, onChange, onKeyPress, onAddTodo }) => {
           value={inputValue}
           onChange={(e) => {
             onChange?.(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              onKeyPress?.();
+            }
           }}
         />
       </StyledInputContainer>
