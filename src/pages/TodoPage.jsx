@@ -87,8 +87,8 @@ const TodoPage = () => {
           return todo;
         });
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   };
   const handleChangeMode = ({ id, isEdit }) => {
@@ -119,8 +119,8 @@ const TodoPage = () => {
           return todo;
         });
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   };
   const handleDelete = (id) => {
