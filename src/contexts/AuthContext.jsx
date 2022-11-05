@@ -1,4 +1,4 @@
-import { login, register } from 'api/auth';
+import { login, register, checkPermission } from 'api/auth';
 import { createContext, useState, useEffect } from 'react';
 import * as jwt from 'jsonwebtoken';
 import { useLocation } from 'react-router-dom';
@@ -71,6 +71,7 @@ export const AuthProvider = ({ children }) => {
             username: data.username,
             password: data.password,
           });
+          console.log('success', success);
           const tempPayload = jwt.decode(authToken);
           if (tempPayload) {
             setPayload(tempPayload);

@@ -19,12 +19,11 @@ const LoginPage = () => {
   const { login, isAuthenticated } = useAuth();
 
   const handleClick = async () => {
-    const { success, authToken } = await login({
+    const success = await login({
       username,
       password,
     });
     if (success) {
-      localStorage.setItem('authToken', authToken);
       Swal.fire({
         position: 'top',
         title: '登入成功！',
