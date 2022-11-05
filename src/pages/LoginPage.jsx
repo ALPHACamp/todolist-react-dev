@@ -53,7 +53,7 @@ const LoginPage = () => {
       <div>
         <ACLogoIcon />
       </div>
-      <h1>登入 Todo</h1>
+      <h1>登入 Todo -2</h1>
 
       <AuthInputContainer>
         <AuthInput
